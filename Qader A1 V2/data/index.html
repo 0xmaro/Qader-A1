@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radar and Motor Control Interface</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="/script.js"></script>
+    <script src="/p5.min.js"></script>
+</head>
+<body>
+    <!-- Radar Interface Section -->
+    <div id="canvas-container"></div>
+    <div id="serial-data">
+        <div>Angle: <span id="angle">0</span></div>
+        <div>Distance: <span id="distance">0</span> cm</div>
+        <div>Range Status: <span id="range-status">Out of range</span></div>
+        <div>Within 100cm: <span id="within-50">0</span></div>
+        <div>Beyond 100cm: <span id="beyond-50">0</span></div>
+    </div>
+    <div id="object-details">
+        <ul id="object-list"></ul>
+    </div>
+    <div id="filter-results"></div>
+    
+    <!-- Radar Control Buttons -->
+    <button id="reset-servo">Reset Servo</button>
+    <button id="resume-scanning">Resume Scanning</button>
+    <button id="led-toggle">Fire</button>
+
+    <!-- Motor Control Section -->
+    <h1>qader A1 Control</h1>
+    <button id="forward-button">Forward</button>
+    <button id="backward-button">Backward</button>
+    <button id="right-button">Left</button>
+    <button id="left-button">Right</button>
+    <button id="stop-button">Stop</button>
+    <br>
+    <button id="slow-button">Slow</button>
+    <button id="medium-button">Medium</button>
+    <button id="fast-button">Fast</button>
+    <button id="return-to-start-button">Return to Start</button>
+</body>
+</html>
