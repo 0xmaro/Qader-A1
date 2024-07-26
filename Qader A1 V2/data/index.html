@@ -1,44 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Radar and Motor Control Interface</title>
-    <link rel="stylesheet" href="/style.css">
-    <script src="/script.js"></script>
-    <script src="/p5.min.js"></script>
+    <link rel="stylesheet" href="/style.css"> <!-- Link to external CSS file -->
+    <script src="/script.js"></script> <!-- Link to external JavaScript file -->
+    <script src="/p5.min.js"></script> <!-- Link to p5.js library -->
 </head>
+
 <body>
     <!-- Radar Interface Section -->
-    <div id="canvas-container"></div>
-    <div id="serial-data">
-        <div>Angle: <span id="angle">0</span></div>
-        <div>Distance: <span id="distance">0</span> cm</div>
-        <div>Range Status: <span id="range-status">Out of range</span></div>
-        <div>Within 100cm: <span id="within-50">0</span></div>
-        <div>Beyond 100cm: <span id="beyond-50">0</span></div>
+    <div id="canvas-container"></div> <!-- Container for radar canvas -->
+    <div id="serial-data"> <!-- Section to display serial data -->
+        <div>Angle: <span id="angle">0</span></div> <!-- Display angle data -->
+        <div>Distance: <span id="distance">0</span> cm</div> <!-- Display distance data -->
+        <div>Range Status: <span id="range-status">Out of range</span></div> <!-- Display range status -->
+        <div>Within 100cm: <span id="within-50">0</span></div> <!-- Display count within 100cm -->
+        <div>Beyond 100cm: <span id="beyond-50">0</span></div> <!-- Display count beyond 100cm -->
     </div>
-    <div id="object-details">
-        <ul id="object-list"></ul>
+    <div id="object-details"> <!-- Section to display object details -->
+        <ul id="object-list"></ul> <!-- List to display objects -->
     </div>
-    <div id="filter-results"></div>
-    
+    <div id="filter-results"></div> <!-- Section to display filtered results -->
+
     <!-- Radar Control Buttons -->
-    <button id="reset-servo">Reset Servo</button>
-    <button id="resume-scanning">Resume Scanning</button>
-    <button id="led-toggle">Fire</button>
+    <button id="reset-servo">Reset Servo</button> <!-- Button to reset servo -->
+    <button id="resume-scanning">Resume Scanning</button> <!-- Button to resume scanning -->
+    <button id="led-toggle">Fire</button> <!-- Button to toggle LED -->
 
     <!-- Motor Control Section -->
-    <h1>qader A1 Control</h1>
-    <button id="forward-button">Forward</button>
-    <button id="backward-button">Backward</button>
-    <button id="right-button">Left</button>
-    <button id="left-button">Right</button>
-    <button id="stop-button">Stop</button>
+    <h1>Qader A1 Control</h1> <!-- Heading for motor control section -->
+    <button id="forward-button">Forward</button> <!-- Button to move forward -->
+    <button id="backward-button">Backward</button> <!-- Button to move backward -->
+    <button id="right-button">Right</button> <!-- Button to turn right -->
+    <button id="left-button">Left</button> <!-- Button to turn left -->
+    <button id="stop-button">Stop</button> <!-- Button to stop -->
     <br>
-    <button id="slow-button">Slow</button>
-    <button id="medium-button">Medium</button>
-    <button id="fast-button">Fast</button>
-    <button id="return-to-start-button">Return to Start</button>
+    <button id="slow-button">Slow</button> <!-- Button for slow speed -->
+    <button id="medium-button">Medium</button> <!-- Button for medium speed -->
+    <button id="fast-button">Fast</button> <!-- Button for fast speed -->
+    <button id="return-to-start-button">Return to Start</button> <!-- Button to return to start -->
 </body>
+
 </html>

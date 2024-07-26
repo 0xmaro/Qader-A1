@@ -3,33 +3,33 @@
 #include <SPIFFS.h>
 #include <ESP32Servo.h>
 
-// إعدادات الشبكة
-const char* ssid = "Ahmed";
-const char* password = "12345678";
+// Network settings
+const char* ssid = "Qader A1"; // Access Point name
+const char* password = "Qader-A1.V1"; // Access Point password
 
-AsyncWebServer server(80);
-Servo myservo;
+AsyncWebServer server(80); // Create an asynchronous web server on port 80
+Servo myservo; // Servo object
 
-volatile int currentSpeed = 100; // سرعة البداية الافتراضية (100 هي السرعة المتوسطة)
-const int trigPin = 12;
-const int echoPin = 13;
-const int redLedPin = 26;
-const int greenLedPin = 25;
-const int ledPin = 27; // تعريف البن للـ LED الجديد
+volatile int currentSpeed = 100; // Default starting speed (100 is medium speed)
+const int trigPin = 12; // Sensor pin for sending pulses
+const int echoPin = 13; // Sensor pin for receiving pulses
+const int redLedPin = 26; // Red LED pin
+const int greenLedPin = 25; // Green LED pin
+const int ledPin = 27; // New LED pin
 
-long duration;
-int distance;
-int pos = 0;
-bool increasing = true;
-bool stopServo = false;
+long duration; // Duration of the ultrasonic pulse
+int distance; // Measured distance
+int pos = 0; // Servo position
+bool increasing = true; // Control increasing or decreasing the servo angle
+bool stopServo = false; // Control stopping the servo movement
 
-bool ledState = false; // تتبع حالة LED
+bool ledState = false; // Track the state of the LED
 
-String command; // String to store app command state.
-int speedCar = 800; // 400 - 1023.
-int speed_Coeff = 3;
+String command; // Store control commands from the app
+int speedCar = 800; // Car speed (400 - 1023)
+int speed_Coeff = 3; // Speed coefficient
 
-// Motor pins
+// Motor driver pins
 const int ENA = 5;
 const int IN_1 = 18;
 const int IN_2 = 19;
@@ -37,70 +37,72 @@ const int ENB = 21;
 const int IN_3 = 22;
 const int IN_4 = 23;
 
+// Struct to store movement state
 struct MovementState {
   int speed;
   unsigned long timestamp;
   String direction;
 };
 
-MovementState startState;
-unsigned long startTime;
+MovementState startState; // Start state
+unsigned long startTime; // Start time
 
 void setup() {
-  Serial.begin(115200);
-  myservo.attach(14);  // توصيل السيرفو
-  pinMode(trigPin, OUTPUT);
-  pinMode(echoPin, INPUT);
-  pinMode(redLedPin, OUTPUT);
-  pinMode(greenLedPin, OUTPUT);
-  pinMode(ledPin, OUTPUT); // تهيئة البن للـ LED الجديد
+  Serial.begin(115200); // Start serial communication
+  myservo.attach(14);  // Attach the servo
+  pinMode(trigPin, OUTPUT); // Set sensor pin as output
+  pinMode(echoPin, INPUT); // Set sensor pin as input
+  pinMode(redLedPin, OUTPUT); // Set red LED pin as output
+  pinMode(greenLedPin, OUTPUT); // Set green LED pin as output
+  pinMode(ledPin, OUTPUT); // Set new LED pin as output
 
-  pinMode(ENA, OUTPUT);
-  pinMode(ENB, OUTPUT);
-  pinMode(IN_1, OUTPUT);
-  pinMode(IN_2, OUTPUT);
-  pinMode(IN_3, OUTPUT);
-  pinMode(IN_4, OUTPUT);
+  pinMode(ENA, OUTPUT); // Set motor A control pin as output
+  pinMode(ENB, OUTPUT); // Set motor B control pin as output
+  pinMode(IN_1, OUTPUT); // Set motor A pin as output
+  pinMode(IN_2, OUTPUT); // Set motor A pin as output
+  pinMode(IN_3, OUTPUT); // Set motor B pin as output
+  pinMode(IN_4, OUTPUT); // Set motor B pin as output
 
-  // تهيئة SPIFFS
+  // Initialize SPIFFS
   if (!SPIFFS.begin(true)) {
-    Serial.println("An Error has occurred while mounting SPIFFS");
+    Serial.println("An error occurred while initializing SPIFFS");
     return;
   }
 
-  // إنشاء نقطة وصول (Access Point)
+  // Create Access Point
   WiFi.softAP(ssid, password);
   IPAddress IP = WiFi.softAPIP();
-  Serial.print("AP IP address: ");
+  Serial.print("Access Point IP address: ");
   Serial.println(IP);
 
-  // توجيه الويب
+  // Set up web routes
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
-    request->send(SPIFFS, "/index.html", "text/html", false, nullptr);
+    request->send(SPIFFS, "/index.html", "text/html");
   });
 
   server.on("/style.css", HTTP_GET, [](AsyncWebServerRequest *request) {
-    request->send(SPIFFS, "/style.css", "text/css", false, nullptr);
+    request->send(SPIFFS, "/style.css", "text/css");
   });
 
   server.on("/script.js", HTTP_GET, [](AsyncWebServerRequest *request) {
-    request->send(SPIFFS, "/script.js", "text/javascript", false, nullptr);
+    request->send(SPIFFS, "/script.js", "text/javascript");
   });
 
   server.on("/p5.min.js", HTTP_GET, [](AsyncWebServerRequest *request) {
-    request->send(SPIFFS, "/p5.min.js", "text/javascript", false, nullptr);
+    request->send(SPIFFS, "/p5.min.js", "text/javascript");
   });
 
   server.on("/favicon.ico", HTTP_GET, [](AsyncWebServerRequest *request) {
     request->send(SPIFFS, "/favicon.ico", "image/x-icon");
   });
 
-  // إعداد الويب للتفاعل مع الحساس
+  // Route to get measured distance
   server.on("/distance", HTTP_GET, [](AsyncWebServerRequest *request) {
     int measuredDistance = measureDistance();
     request->send_P(200, "text/plain", String(measuredDistance).c_str());
   });
 
+  // Route to control servo angle
   server.on("/servo", HTTP_POST, [](AsyncWebServerRequest *request) {
     if (request->hasParam("angle", true)) {
       String angle = request->getParam("angle", true)->value();
@@ -108,10 +110,11 @@ void setup() {
       myservo.write(pos);
       request->send(200, "text/plain", "OK");
     } else {
-      request->send(400, "text/plain", "Bad Request");
+      request->send(400, "text/plain", "Invalid request");
     }
   });
 
+  // Route to get sensor data
   server.on("/data", HTTP_GET, [](AsyncWebServerRequest *request) {
     String json = "{";
     json += "\"angle\":" + String(pos) + ",";
@@ -120,11 +123,13 @@ void setup() {
     request->send(200, "application/json", json);
   });
 
+  // Route to resume servo scanning
   server.on("/resume", HTTP_GET, [](AsyncWebServerRequest *request) {
     stopServo = false;
     request->send(200, "text/plain", "Resumed scanning");
   });
 
+  // Route to control LED state
   server.on("/led", HTTP_POST, [](AsyncWebServerRequest *request) {
     if (request->hasParam("state", true)) {
       String state = request->getParam("state", true)->value();
@@ -147,10 +152,11 @@ void setup() {
       }
       request->send(200, "text/plain", "OK");
     } else {
-      request->send(400, "text/plain", "Bad Request");
+      request->send(400, "text/plain", "Invalid request");
     }
   });
 
+  // Route to control driving commands
   server.on("/command", HTTP_POST, [](AsyncWebServerRequest *request) {
     if (request->hasParam("command", true)) {
       command = request->getParam("command", true)->value();
@@ -175,10 +181,11 @@ void setup() {
       }
       request->send(200, "text/plain", "OK");
     } else {
-      request->send(400, "text/plain", "Bad Request");
+      request->send(400, "text/plain", "Invalid request");
     }
   });
 
+  // Route to clear start state
   server.on("/clearState", HTTP_POST, [](AsyncWebServerRequest *request) {
     startState.speed = 0;
     startState.timestamp = 0;
@@ -186,13 +193,13 @@ void setup() {
     request->send(200, "text/plain", "Start state cleared");
   });
 
-  server.begin();
+  server.begin(); // Start the web server
 }
 
 void loop() {
-  distance = measureDistance();
- 
+  distance = measureDistance(); // Measure the distance
 
+  // Control servo movement
   if (!stopServo) {
     if (increasing) {
       pos += 1;
@@ -209,7 +216,7 @@ void loop() {
     delay(30);
   }
 
-  // التحكم في LED
+  // Control LED state based on distance
   if (distance >= 100) {
     digitalWrite(redLedPin, LOW);
     digitalWrite(greenLedPin, HIGH);
@@ -226,7 +233,8 @@ void loop() {
   }
 }
 
- int measureDistance() {
+// Measure the distance using the ultrasonic sensor
+int measureDistance() {
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
   digitalWrite(trigPin, HIGH);
@@ -237,12 +245,14 @@ void loop() {
   return distance;
 }
 
+// Store the start state
 void storeStartState(String direction) {
   startState.speed = speedCar;
   startState.timestamp = millis();
   startState.direction = direction;
 }
 
+// Move forward
 void goAhead() {
   storeStartState("goAhead");
   digitalWrite(IN_1, HIGH);
@@ -254,6 +264,7 @@ void goAhead() {
   analogWrite(ENB, speedCar);
 }
 
+// Move backward
 void goBack() {
   storeStartState("goBack");
   digitalWrite(IN_1, LOW);
@@ -265,6 +276,7 @@ void goBack() {
   analogWrite(ENB, speedCar);
 }
 
+// Turn right
 void goRight() {
   storeStartState("goRight");
   digitalWrite(IN_1, LOW);
@@ -276,6 +288,7 @@ void goRight() {
   analogWrite(ENB, speedCar);
 }
 
+// Turn left
 void goLeft() {
   storeStartState("goLeft");
   digitalWrite(IN_1, HIGH);
@@ -287,6 +300,7 @@ void goLeft() {
   analogWrite(ENB, speedCar);
 }
 
+// Stop the robot
 void stopRobot() {
   digitalWrite(IN_1, LOW);
   digitalWrite(IN_2, LOW);
@@ -297,6 +311,7 @@ void stopRobot() {
   analogWrite(ENB, 0);
 }
 
+// Return to the start position
 void returnToStart() {
   unsigned long currentTime = millis();
   unsigned long elapsedTime = currentTime - startState.timestamp;
