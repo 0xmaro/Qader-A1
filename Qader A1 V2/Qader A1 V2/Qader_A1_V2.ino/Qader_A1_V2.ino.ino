@@ -1,3 +1,9 @@
+//  This video to explain look and what's happening -> "  https://youtu.be/1CY9IlN5VvA   "
+// In order to avoid any problems when uploading the code,
+// use an old version of Arduino IDE and I recommend a version less than 2.7 because the library IRremote , ESPAsyncWebServer and SPIFFS 
+// does not support modern versions.
+// < I hope it helps you  >
+
 #include <WiFi.h>
 #include <ESPAsyncWebServer.h>
 #include <SPIFFS.h>
