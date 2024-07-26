@@ -1,0 +1,172 @@
+html {
+  font-family: Arial, sans-serif;
+  display: inline-block;
+  margin: 0px auto;
+  text-align: center;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #000000;
+  /* Set background color to black */
+  color: white;
+  /* Set text color to white */
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+  /* Hide overflow to prevent scrolling */
+  position: relative;
+  /* Set position to relative for positioning child elements */
+}
+
+/* Container for radar canvas */
+#canvas-container {
+  position: absolute;
+  top: 50px;
+  left: 48%;
+  transform: translateX(-50%);
+  border: 6px solid #27ff27;
+  /* Green border color */
+  width: 1200px;
+  height: 900px;
+  box-shadow:
+    0px 0px 5px #62f51f,
+    0px 0px 30px #62f51f,
+    0px 0px 90px #62f51f;
+  /* Green glowing shadow */
+}
+
+/* Section to display serial data */
+#serial-data {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  /* Semi-transparent black background */
+  padding: 10px;
+  border-radius: 5px;
+  /* Rounded corners */
+}
+
+/* Section to display object details */
+#object-details {
+  position: absolute;
+  top: 30px;
+  right: 160px;
+  background-color: rgba(0, 0, 0, 0.5);
+  /* Semi-transparent black background */
+  padding: 10px;
+  border-radius: 10px;
+  /* Rounded corners */
+  color: #62f51f;
+  /* Green text color */
+  max-height: 300px;
+  overflow-y: auto;
+  /* Enable vertical scrolling */
+}
+
+.object-item {
+  cursor: pointer;
+  text-decoration: underline;
+  /* Underline text */
+}
+
+/* General button styling */
+button {
+  position: absolute;
+  background-color: #000000;
+  /* Black background */
+  border: 2px solid #62f51f;
+  /* Green border */
+  border-radius: 10px;
+  /* Rounded corners */
+  padding: 15px 20px;
+  font-size: 20px;
+  color: #62f51f;
+  /* Green text color */
+  outline: none;
+  text-transform: capitalize;
+  /* Capitalize text */
+}
+
+/* Radar Control Buttons */
+#reset-servo {
+  bottom: 20px;
+  left: 23%;
+  transform: translateX(-50%);
+}
+
+#resume-scanning {
+  bottom: 20px;
+  left: 75%;
+  transform: translateX(-50%);
+}
+
+#led-toggle {
+  bottom: 100px;
+  left: 8%;
+  color: #ff3c00;
+  /* Red text color */
+  box-shadow:
+    0px 0px 5px #f50000,
+    0px 0px 30px #f50000,
+    0px 0px 90px #f50000;
+  /* Red glowing shadow */
+  transform: translateX(-50%);
+}
+
+/* Motor Control Buttons */
+#forward-button {
+  bottom: 219px;
+  right: 70px;
+  transform: translateX(-50%);
+}
+
+#backward-button {
+  bottom: 150px;
+  right: 57px;
+  transform: translateX(-50%);
+}
+
+#right-button {
+  bottom: 150px;
+  right: 263px;
+}
+
+#left-button {
+  bottom: 150px;
+  right: 15px;
+}
+
+#stop-button {
+  bottom: 75px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+#slow-button {
+  bottom: 219px;
+  left: 70px;
+  transform: translateX(-50%);
+}
+
+#medium-button {
+  bottom: 319px;
+  left: 70px;
+  transform: translateX(-50%);
+}
+
+#fast-button {
+  bottom: 419px;
+  left: 70px;
+  transform: translateX(-50%);
+}
+
+#return-to-start-button {
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
