@@ -1,4 +1,6 @@
+// Wait for the DOM to fully load before running the script
 document.addEventListener('DOMContentLoaded', function () {
+    // Get references to DOM elements by their IDs
     const angleElement = document.getElementById('angle');
     const distanceElement = document.getElementById('distance');
     const rangeStatusElement = document.getElementById('range-status');
@@ -18,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const fastButton = document.getElementById('fast-button');
     const returnToStartButton = document.getElementById('return-to-start-button');
 
+    // Initialize variables to keep track of states
     let ledState = false;
     let selectedObject = null;
 
@@ -26,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let objects = [];
     let objectsWithin50 = [];
 
+    // Function to fetch and update data from the server
     function updateData() {
         fetch('/data')
             .then(response => response.json())
@@ -47,6 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     }
 
+    // Function to send a POST request to a specified URL with given data
     function sendPostRequest(url, data) {
         fetch(url, {
             method: 'POST',
@@ -55,6 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Function to send a command to the server
     function sendCommand(command) {
         fetch('/command', {
             method: 'POST',
@@ -63,6 +69,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Add event listeners to buttons to perform various actions
     resetServoButton.addEventListener('click', () => {
         sendPostRequest('/servo', { angle: 0 });
     });
@@ -112,6 +119,7 @@ document.addEventListener('DOMContentLoaded', function () {
         sendCommand('returnToStart');
     });
 
+    // Handle keyboard events to control the robot
     document.addEventListener('keydown', (event) => {
         switch (event.key) {
             case 'ArrowUp':
@@ -148,6 +156,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    // Handle clicks on the object list to select and highlight objects
     objectListElement.addEventListener('click', (event) => {
         const objectText = event.target.textContent;
         const objectData = /Filtered Object \d+: Distance (\d+) cm, Angle (\d+)°/.exec(objectText);
@@ -159,28 +168,32 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    // Periodically update data from the server
     setInterval(updateData, 1000);
 });
 
-
+// Function to send a command to the server
 function sendCommand(command) {
     fetch('/' + command)
         .then(response => response.text())
         .then(data => console.log(data));
 }
 
+// Initialize variables for drawing radar and objects
 let angle = 0;
 let distance = 0;
 let objects = [];
 let objectsWithin50 = [];
 let selectedObject = null;
 
+// Define colors for various elements
 const radarColor = [98, 245, 31];
 const objectColor = [255, 10, 10];
 const selectedObjectColor = [0, 0, 255];
 const lineColor = [30, 250, 60];
 const circle50Color = [0, 0, 255];
 
+// p5.js setup function to initialize the canvas
 function setup() {
     let canvas = createCanvas(1200, 900);
     canvas.parent('canvas-container');
@@ -189,6 +202,7 @@ function setup() {
     strokeWeight(1);
 }
 
+// p5.js draw function to update the canvas
 function draw() {
     background(0, 4);
     drawRadar();
@@ -198,6 +212,7 @@ function draw() {
     updateObjectCount();
 }
 
+// Function to draw the radar arcs and lines
 function drawRadar() {
     push();
     translate(width / 2, height - height * 0.074);
@@ -222,6 +237,7 @@ function drawRadar() {
     pop();
 }
 
+// Function to draw the line indicating the current angle
 function drawLine() {
     push();
     strokeWeight(9);
@@ -231,6 +247,7 @@ function drawLine() {
     pop();
 }
 
+// Function to draw the stored objects on the radar
 function drawStoredObjects() {
     push();
     translate(width / 2, height - height * 0.074);
@@ -248,6 +265,7 @@ function drawStoredObjects() {
     pop();
 }
 
+// Function to draw a pulsing effect for the selected object
 function drawPulsingEffect(angle, distance) {
     let startTime = millis();
     let pulseDuration = 30000; // 30 seconds
@@ -265,6 +283,8 @@ function drawPulsingEffect(angle, distance) {
 
     drawPulse();
 }
+
+// Function to draw text on the radar indicating distances
 function drawText() {
     push();
     fill(0);
@@ -288,6 +308,7 @@ function drawText() {
     pop();
 }
 
+// Function to update the object count within 50 cm and beyond
 function updateObjectCount() {
     let within50 = 0;
     let beyond50 = 0;
@@ -305,6 +326,7 @@ function updateObjectCount() {
     updateObjectDetails();
 }
 
+// Function to update the object details list in the DOM
 function updateObjectDetails() {
     let objectList = document.getElementById('object-list');
     objectList.innerHTML = '';
@@ -322,6 +344,7 @@ function updateObjectDetails() {
     });
 }
 
+// Function to highlight a selected object and send a request to the server to move the servo
 function highlightObject(obj) {
     selectedObject = obj;
     if (obj.distance <= 100) {
@@ -330,7 +353,7 @@ function highlightObject(obj) {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body:` angle=${obj.angle}`
+            body: `angle=${obj.angle}`
         }).then(response => {
             if (response.ok) {
                 console.log('Servo directed to selected object successfully');
@@ -342,6 +365,7 @@ function highlightObject(obj) {
     draw();
 }
 
+// Periodically fetch data from the server and update the radar
 setInterval(() => {
     fetch('/data')
         .then(response => response.json())
@@ -364,6 +388,7 @@ setInterval(() => {
         });
 }, 1000);
 
+// Event listener to resume scanning when the resume button is clicked
 document.getElementById('resume-scanning').addEventListener('click', () => {
     fetch('/resume')
         .then(response => {
@@ -375,6 +400,7 @@ document.getElementById('resume-scanning').addEventListener('click', () => {
         });
 });
 
+// Event listener to reset the servo to its initial position when the reset button is clicked
 document.getElementById('reset-servo').addEventListener('click', () => {
     fetch('/servo', {
         method: 'POST',
@@ -391,12 +417,14 @@ document.getElementById('reset-servo').addEventListener('click', () => {
     });
 });
 
+// Function to send a command to the server
 function sendCommand(command) {
     fetch('/' + command)
         .then(response => response.text())
         .then(data => console.log(data));
 }
 
+// Function to update the distance displayed on the radar
 function updateDistance() {
     fetch('/distance')
         .then(response => response.text())
@@ -405,4 +433,5 @@ function updateDistance() {
         });
 }
 
+// Periodically update the distance from the server
 setInterval(updateDistance, 1000);
