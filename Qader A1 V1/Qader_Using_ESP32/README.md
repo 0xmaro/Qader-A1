@@ -33,15 +33,13 @@ A video explaining the project and showing it in action is available [here](http
 
 - Arduino IDE (recommended version below 2.7 for compatibility)
 - IRremote library
-- ESP32Servo library
-- ESPAsyncWebServer and SPIFFS libraries (if additional features are required)
 
 ### Installation
 
 1. **Clone the repository**:
     ```bash
-    git clone https://github.com/yourusername/esp32-tank-ir-control.git
-    cd esp32-tank-ir-control
+    git clone https://github.com/0xmaro/Qader-A1.git
+    cd Qader-A1/Qader\ A1\ V1/Qader_Using_ESP32
     ```
 
 2. **Open the project in your IDE**.
