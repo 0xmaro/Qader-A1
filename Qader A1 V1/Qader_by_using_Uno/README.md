@@ -38,16 +38,17 @@ The code handles receiving IR signals and controlling the tank based on those si
 
 1.**Clone the repository**:
 
-    ```
+  ``` bash
     git clone https://github.com/0xmaro/Qader-A1.git
     cd Qader-A1/Qader\ A1\ V1/Qader_by_using_Uno
-    ```
-    
+  ```
+
 2. **Install Libraries**: Ensure you have the following libraries installed:
    - `IRremote`
    - `Servo`
 3. **Upload to Arduino**: Open the code in the Arduino IDE and upload it to your Arduino Uno.
-4.     - Set the baud rate to 115200 in the `setup()` function:
+
+4. - Set the baud rate to 115200 in the `setup()` function:
       ```cpp
       Serial.begin(115200);
 
