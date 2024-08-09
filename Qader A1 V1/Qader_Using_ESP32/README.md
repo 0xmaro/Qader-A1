@@ -74,7 +74,3 @@ A video explaining the project and showing it in action is available [here](http
 - Implement additional controls using Bluetooth or Wi-Fi.
 - Add a camera for live video feed and control.
 - Integrate advanced obstacle avoidance algorithms.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
