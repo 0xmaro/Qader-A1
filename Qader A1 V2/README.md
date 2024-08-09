@@ -15,7 +15,7 @@ The Qader A1 project involves an ESP32-controlled robot that can be navigated us
 
 The project is organized as follows:
 
-- **`main.cpp`**: The core C++ code for controlling the robot, handling Wi-Fi, and serving the web interface.
+- **`Qader A1 V2.ino`**: The core C++ code for controlling the robot, handling Wi-Fi, and serving the web interface.
 - **`index.html`**: The HTML file for the web interface, including the radar and motor control sections.
 - **`style.css`**: The CSS file for styling the web interface, ensuring a polished and consistent look.
 - **`script.js`**: The JavaScript file for handling client-side interactions, including button controls and radar visualization.
