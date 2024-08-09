@@ -37,10 +37,12 @@ The code handles receiving IR signals and controlling the tank based on those si
 ### Installation
 
 1.**Clone the repository**:
+
     ```bash
     git clone https://github.com/0xmaro/Qader-A1.git
     cd Qader-A1/Qader\ A1\ V1/Qader_by_using_Uno
     ```
+    
 2. **Install Libraries**: Ensure you have the following libraries installed:
    - `IRremote`
    - `Servo`
