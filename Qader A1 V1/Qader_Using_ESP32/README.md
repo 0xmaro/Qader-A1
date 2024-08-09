@@ -1,4 +1,4 @@
-# ESP32 Tank Controlled by Infrared Signals
+# Qader A1 V1 ESP32 Tank Controlled by Infrared Signals
 
 ## Project Overview
 
